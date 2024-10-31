@@ -1,4 +1,5 @@
 from django.utils import timezone
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -72,3 +73,26 @@ class BorrowingViewSet(
 
         serializer = BorrowingDetailSerializer(borrowing)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "is_active",
+                type=bool,
+                description=(
+                        "Filtering by active borrowings "
+                        "(still not returned)"
+                ),
+            ),
+            OpenApiParameter(
+                "user_id",
+                type=int,
+                description=(
+                    "Filtering by user, for admin users, "
+                    "so admin can see all users’ borrowings"
+                )
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
