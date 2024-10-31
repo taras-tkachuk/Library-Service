@@ -1,5 +1,5 @@
 from django.utils import timezone
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -11,7 +11,12 @@ from borrowing.serializers import (
 )
 
 
-class BorrowingViewSet(viewsets.ModelViewSet):
+class BorrowingViewSet(
+    viewsets.GenericViewSet,
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin
+):
     queryset = Borrowing.objects.select_related("book", "user")
 
     def get_queryset(self):
