@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime
 
 from django.db import transaction
@@ -6,6 +7,7 @@ from rest_framework.exceptions import ValidationError
 
 from book.serializers import BookSerializer
 from borrowing.models import Borrowing
+from borrowing.notifications import send_notification
 from user.serializers import UserSerializer
 
 
@@ -36,6 +38,12 @@ class BorrowingSerializer(serializers.ModelSerializer):
                 book = validated_data.pop("book")
                 book.rent_book(ValidationError)
                 borrowing = Borrowing.objects.create(book=book, **validated_data)
+                text = (
+                    f"{borrowing.user.email} borrowed "
+                    f"{borrowing.book.title}, {borrowing.book.author} "
+                    f"till {borrowing.expected_return_date}"
+                )
+                asyncio.run(send_notification(text))
                 return borrowing
         except ValidationError as e:
             raise serializers.ValidationError(str(e))
