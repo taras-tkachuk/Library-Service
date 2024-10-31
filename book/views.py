@@ -2,12 +2,12 @@ from rest_framework import viewsets
 
 from book.models import Book
 from book.serializers import BookSerializer, BookListSerializer
-from library_service.permissions import IsAdminOrIfAuthenticatedReadOnly
+from library_service.permissions import IsAdminOrReadOnly
 
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
-    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+    permission_classes = (IsAdminOrReadOnly,)
 
     def get_queryset(self):
         title = self.request.query_params.get("title")
