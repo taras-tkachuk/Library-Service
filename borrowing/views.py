@@ -1,5 +1,6 @@
 from django.utils import timezone
-from rest_framework import viewsets, status
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -11,15 +12,25 @@ from borrowing.serializers import (
 )
 
 
-class BorrowingViewSet(viewsets.ModelViewSet):
+class BorrowingViewSet(
+    viewsets.GenericViewSet,
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin
+):
     queryset = Borrowing.objects.select_related("book", "user")
 
     def get_queryset(self):
         queryset = self.queryset
+        if self.request.user.is_authenticated:
+            if not self.request.user.is_staff:
+                queryset = queryset.filter(user=self.request.user)
+        else:
+            return None
         user_id = self.request.query_params.get("user_id")
         is_active = self.request.query_params.get("is_active")
 
-        if user_id:
+        if user_id and self.request.user.is_staff:
             queryset = queryset.filter(user=user_id)
 
         if is_active:
@@ -62,3 +73,26 @@ class BorrowingViewSet(viewsets.ModelViewSet):
 
         serializer = BorrowingDetailSerializer(borrowing)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "is_active",
+                type=bool,
+                description=(
+                        "Filtering by active borrowings "
+                        "(still not returned)"
+                ),
+            ),
+            OpenApiParameter(
+                "user_id",
+                type=int,
+                description=(
+                    "Filtering by user, for admin users, "
+                    "so admin can see all users’ borrowings"
+                )
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
