@@ -20,10 +20,10 @@ git clone https://github.com/taras-tkachuk/Library-Service
 cd library-service-api
 ```
 
-**Run with Docker**:
-```
-docker-compose up --build
-```
+## How to run:
+- Copy .env.sample -> .env and populate with all required data
+- `docker-compose up --build`
+- Create admin user & Create schedule for running sync in DB
 
 ## Usage
 ### Authentication
