@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "borrowing",
     "drf_spectacular",
     "notification",
+    "django_celery_beat"
 ]
 
 MIDDLEWARE = [
@@ -167,3 +168,9 @@ SPECTACULAR_SETTINGS = {
         "defaultModelExpandDepth": 2,
     },
 }
+
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
+CELERY_TIMEZONE = "Europe/Kyiv"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
