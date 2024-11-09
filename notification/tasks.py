@@ -19,8 +19,8 @@ def check_overdue_borrowings_and_notify() -> None:
             for borrowing in overdue_borrowings:
                 message = (f"Borrowing #{borrowing.id} is overdue. "
                            f"Please return the book - {borrowing.book.title}.")
-                send_notification(message)
+                asyncio.run(send_notification(message))
         else:
-            send_notification("No borrowings overdue today.")
+            asyncio.run(send_notification("No borrowings overdue today."))
     except Exception as e:
-        send_notification(f"Error in check_overdue_borrowings_and_notify task: {str(e)}")
+        asyncio.run(send_notification(f"Error in check_overdue_borrowings_and_notify task: {str(e)}"))
