@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.contrib.auth import get_user_model
 from django.db import models, IntegrityError
 
@@ -30,6 +32,8 @@ class Borrowing(models.Model):
             raise error("Actual return date can't be less than borrow date!")
 
     def clean(self):
+        if not self.borrow_date:
+            self.borrow_date = date.today()
         self.validate_creation_time(
             self.borrow_date,
             self.expected_return_date,
