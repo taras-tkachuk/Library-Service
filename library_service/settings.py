@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "user",
     "borrowing",
     "drf_spectacular",
+    "notification",
 ]
 
 MIDDLEWARE = [
