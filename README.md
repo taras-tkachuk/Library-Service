@@ -8,7 +8,7 @@ The Library API Service is a Django REST framework-based project designed to man
 
 * Borrowing information: Allow users to create borrowing of the book, retrieve information about their borrowings, filter list of borrowings by active status (book returned or not), return book. Admin user can receive list of all borrowings and filter it to receive borrowings of specific user.
  
-* Notification: After successful borrowing creation user receives message to Telegram chat about its details. 
+* Notification: After successful borrowing creation or borrowings overdue user receives message to Telegram chat about its details. 
 
 * Authentication: User can create profile entering email and password. API is secured with JWT (JSON Web Tokens) authentication to protect sensitive data. 
 
