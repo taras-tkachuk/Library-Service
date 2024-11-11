@@ -7,7 +7,7 @@ from rest_framework.exceptions import ValidationError
 
 from book.serializers import BookSerializer
 from borrowing.models import Borrowing
-from borrowing.notifications import send_notification
+from notification.telegram import send_notification
 from user.serializers import UserSerializer
 
 
